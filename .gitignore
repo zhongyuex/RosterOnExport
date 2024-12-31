@@ -1,3 +1,6 @@
+## Ignore credentials
+credentials.json
+
 ## Ignore output files
 roster.ics
 roster.json
