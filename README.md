@@ -25,6 +25,9 @@ Before running the script, ensure you have the following:
      * Add http://localhost/8080/ as an authorized redirect URI.
    - Download Credentials:
      * Once created, download the secret file as `gcal_credentials.json` and save it in your project directory.
+4. **Create a designated Google Calendar**
+   - Each update using this script will remove any calendar item that is not in sync with RosterOn. Please do not create your own event in this calendar if you want to use this script repeatedly.
+   - Get your calendar ID from calendar setting - Integrate calendar. Save calendar ID as `calendarID.txt` in your project directory.
 
 ## Setup Instructions
 
