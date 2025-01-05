@@ -12,7 +12,7 @@ Before using the script, ensure you have the following:
 
    Install them using pip:
    ```bash
-   pip install beautifulsoup4 ics
+   pip install beautifulsoup4 ics pytz
    ```
 
 ## Setup roster2ics.py
