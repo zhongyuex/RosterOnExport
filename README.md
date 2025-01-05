@@ -13,9 +13,18 @@ Before running the script, ensure you have the following:
      pip install google-auth google-auth-oauthlib google-api-python-client bs4 ics requests pytz
      ```
 3. **Google Calendar API Access**
-   - Create a Google Cloud project and enable the Google Calendar API.
-   - Create a desktop client for your project, and save the client secret file as `gcal_credentials.json` in the project directory.
-   - Create a designated calendar in your Google calendar, find and save the calendar ID as `calendarID.txt` in the project directory.
+   - Go to Google Cloud Console:
+      * Select your project or create a new one.
+   - Enable Google Calendar API:
+     * Go to APIs & Services > Library.
+     * Search for "Google Calendar API" and enable it.
+   - Create OAuth 2.0 Client ID:
+     * Go to APIs & Services > Credentials.
+     * Click Create Credentials > OAuth Client ID.
+     * Choose Desktop as the application type.
+     * Add http://localhost/8080/ as an authorized redirect URI.
+   - Download Credentials:
+     * Once created, download the secret file as `gcal_credentials.json` and save it in your project directory.
 
 ## Setup Instructions
 
