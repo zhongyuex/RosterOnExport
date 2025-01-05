@@ -14,7 +14,7 @@ Before running the script, ensure you have the following:
      ```
 3. **Google Calendar API Access**
    - Create a Google Cloud project and enable the Google Calendar API.
-   - Create a desktop client and download the client secret file for your project, save it as `gcal_credentials.json` in the project directory.
+   - Create a desktop client for your project, and save the client secret file as `gcal_credentials.json` in the project directory.
    - Create a designated calendar in your Google calendar, find and save the calendar ID as `calendarID.txt` in the project directory.
 
 ## Setup Instructions
