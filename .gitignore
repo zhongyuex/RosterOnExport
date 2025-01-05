@@ -1,7 +1,11 @@
 ## Ignore credentials
-credentials.json
+RosterOn_credentials.json
+gcal_credentials.json
+token.json
+calendarID.txt
 
 ## Ignore output files
+source.html
 roster.ics
 roster.json
 
