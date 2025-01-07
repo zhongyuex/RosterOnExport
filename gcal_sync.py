@@ -209,9 +209,12 @@ def update_google_calendar(service, calendar_id, calendar):
 
 
 def main():
+    # Time stamp
+    print(f"Script started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
     # Load credentials
     with open("credentials.json", "r") as file:
-        credentials = json.load(file)
+        calendar_id = json.load(file)["gcal"]["calendar_id"]
 
     # Fetch the roster HTML
     fetch_roster()
@@ -224,7 +227,7 @@ def main():
     print("Google service authenticated")
 
     # Update Google Calendar
-    update_google_calendar(service, credentials["gcal"]["calendar_id"], calendar)
+    update_google_calendar(service, calendar_id, calendar)
     print("All Done")
 
 
