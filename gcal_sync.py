@@ -9,38 +9,49 @@ import pytz
 import os
 import requests
 import json
+import sys
+
+# Redirect stdout and stderr to a log file
+log_file = open("script.log", "a")  # Append mode to keep logs
+sys.stdout = log_file
+sys.stderr = log_file
 
 # Google Calendar API scopes
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-def authenticate_google_calendar(secret_file_path, token_file_path = "token.json"):
-    """Authenticate and return the Google Calendar API service without saving tokens."""
+def authenticate_google_calendar(credentials_file="credentials.json"):
+    """Authenticate and return the Google Calendar API service."""
     creds = None
+    with open(credentials_file, "r") as file:
+        credentials = json.load(file)
+    client_secrets_file = credentials["gcp"]["client_secrets_file"]
 
     # Load existing credentials
-    if os.path.exists(token_file_path):
-        creds = Credentials.from_authorized_user_file(token_file_path, SCOPES)
+    token_file = "token.json"
+    if os.path.exists(token_file):
+        creds = Credentials.from_authorized_user_file(token_file, SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(secret_file_path, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, SCOPES)
             creds = flow.run_local_server(port=8080)
 
         # Save the credentials for future use
-        with open(token_file_path, 'w') as token:
+        with open(token_file, "w") as token:
             token.write(creds.to_json())
 
-    return build('calendar', 'v3', credentials=creds)
+    return build("calendar", "v3", credentials=creds)
 
-def fetch_roster(cred_file_path='RosterOn_credentials.json'):
+def fetch_roster(credentials_file="credentials.json"):
     """Fetch the RosterON HTML from the web and save it to a file."""
     LOGIN_URL = "https://rmhrosterweb.ssg.org.au/RosterOnProd/Mobile/Account/Login"
 
-    # Load user credentials
-    with open(cred_file_path, "r") as cred_file:
-        credentials = json.load(cred_file)
+    # Load credentials
+    with open(credentials_file, "r") as file:
+        credentials = json.load(file)
+    rosteron_credentials = credentials["rosteron"]
 
     # Start a session
     session = requests.Session()
@@ -52,10 +63,10 @@ def fetch_roster(cred_file_path='RosterOn_credentials.json'):
     # If there are CSRF tokens or other hidden fields, extract them
     csrf_token = soup.find("input", {"name": "__RequestVerificationToken"})
     if csrf_token:
-        credentials["__RequestVerificationToken"] = csrf_token["value"]
+        rosteron_credentials["__RequestVerificationToken"] = csrf_token["value"]
 
     # Send the POST request to log in
-    response = session.post(LOGIN_URL, data=credentials)
+    response = session.post(LOGIN_URL, data=rosteron_credentials)
 
     # Check the response
     if response.status_code == 200:
@@ -78,6 +89,7 @@ def fetch_roster(cred_file_path='RosterOn_credentials.json'):
             print(f"Failed to access roster page. Status code: {roster_response.status_code}")
     else:
         print("Login failed. Check your credentials or the login process.")
+
 
 def read_roster(html_file_path = "source.html"):
     """Parse the roster HTML file and return a Calendar object."""
@@ -197,6 +209,10 @@ def update_google_calendar(service, calendar_id, calendar):
 
 
 def main():
+    # Load credentials
+    with open("credentials.json", "r") as file:
+        credentials = json.load(file)
+
     # Fetch the roster HTML
     fetch_roster()
 
@@ -204,16 +220,13 @@ def main():
     calendar = read_roster()
 
     # Authenticate Google Calendar API
-    service = authenticate_google_calendar('gcal_credentials.json')
+    service = authenticate_google_calendar()
     print("Google service authenticated")
 
-    # Read calendar ID from file
-    with open("calendarID.txt", "r") as file:
-        calendar_id = file.read().strip()
-
     # Update Google Calendar
-    update_google_calendar(service, calendar_id, calendar)
+    update_google_calendar(service, credentials["gcal"]["calendar_id"], calendar)
     print("All Done")
+
 
 if __name__ == "__main__":
     main()
