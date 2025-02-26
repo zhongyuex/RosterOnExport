@@ -1,6 +1,8 @@
 # RosterOn to Google Calendar
 This project automates the process of fetching your roster from RosterOn, parsing it, and synchronizing it with your Google Calendar from the earliest event entry found in RosterOn.
 
+The following instructions are for Google Calendar. Consider ics export (code in ``offline`` branch) for other calendars.
+
 ## Prerequisites
 Before running the script, ensure you have the following:
 
@@ -59,7 +61,7 @@ Run the script to fetch, parse, and synchronize your roster:
 python gcal_sync.py
 ```
 
-### Step 4: Verify Google Calendar
+### Step 4: Verify Output
 1. Check the script output at `script.log`
 2. Check your Google Calendar to ensure the roster events have been added and synchronized correctly.
 
