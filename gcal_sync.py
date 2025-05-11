@@ -128,8 +128,8 @@ def read_roster(html_file_path = "source.html"):
                 event.name = description
                 event.description = role
 
-                # Handle annual leave as all-day events
-                if "annual leave" in description.lower():
+                # Handle annual leave and secondment as all-day events
+                if "annual leave" in description.lower() or "secondment" in description.lower():
                     event.begin = start_datetime.date()
                     event.make_all_day()
                 else:
