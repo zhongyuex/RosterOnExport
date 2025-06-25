@@ -151,9 +151,9 @@ def update_google_calendar(service, calendar_id, calendar):
     time_min = datetime.combine(start_date, datetime.min.time()).astimezone(pytz.UTC).isoformat()
 
     # List existing events from the earliest date onwards
-    existing_events = service.events().list(calendarId=calendar_id, timeMin=time_min).execute().get('items', [])
+    existing_events = service.events().list(calendarId=calendar_id, timeMin=time_min, maxResults = 2500).execute().get('items', [])
 
-    # Convert existing events into a set of keys (summary, start, end)
+    # Convert existing Google Calendar events into a set of keys (summary, start, end)
     existing_event_keys = {
         (
             e['summary'],
@@ -163,7 +163,7 @@ def update_google_calendar(service, calendar_id, calendar):
         for e in existing_events
     }
 
-    # Convert new events into a set of keys (summary, start, end)
+    # Convert new RosterOn events into a set of keys (summary, start, end)
     new_event_keys = {
         (
             event.name,
